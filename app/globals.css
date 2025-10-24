@@ -1,0 +1,94 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666666;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888888;
+}
+
+/* Animated gradient background */
+.gradient-bg {
+  background: linear-gradient(135deg, #000000, #1a1a1a, #333333, #000000);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Elegant glow effect */
+.warm-glow {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 0 0 40px rgba(255, 255, 255, 0.05);
+}
+
+/* Black texture effect */
+.wood-texture {
+  background: linear-gradient(135deg, 
+    #000000 0%, 
+    #1a1a1a 25%, 
+    #333333 50%, 
+    #2a2a2a 75%, 
+    #1a1a1a 100%
+  );
+  background-size: 200% 200%;
+  animation: darkShift 8s ease infinite;
+}
+
+@keyframes darkShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.3s ease;
+}
+
+/* Menu overlay */
+.menu-overlay {
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+}
