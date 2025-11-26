@@ -332,8 +332,8 @@ function CategoriasPanel() {
   const idiomaPreferido = 1;
 
   // Crear
-  const [nuevo, setNuevo] = useState<{ padre: number | null; activo: number; traducciones: CategoriaTR[] }>({
-    padre: null, activo: 1, traducciones: []
+  const [nuevo, setNuevo] = useState<{ padre: number | null; activo: number; orden: number; traducciones: CategoriaTR[] }>({
+    padre: null, activo: 1, orden: 0, traducciones: []
   });
 
   // Estados por fila
@@ -355,9 +355,10 @@ function CategoriasPanel() {
       await categoriasApi.create({
         idcategoriapadre: nuevo.padre,
         activo: nuevo.activo,
+        orden: nuevo.orden,
         traducciones: nuevo.traducciones,
       });
-      setNuevo({ padre: null, activo: 1, traducciones: [] });
+      setNuevo({ padre: null, activo: 1, orden: 0, traducciones: [] });
       await load();
     } catch (e: any) { setError(e.message); }
   }
@@ -375,6 +376,7 @@ function CategoriasPanel() {
         idcategoria: row.idcategoria,
         idcategoriapadre: row.idcategoriapadre,
         activo: row.activo,
+        orden: row.orden,
         traducciones: row.traducciones,
       });
       setDirty(d => ({ ...d, [id]: false }));
@@ -401,7 +403,7 @@ function CategoriasPanel() {
 
       <div className="mb-6 p-4 rounded border border-gray-800 bg-gray-950 shadow-inner">
         {/* Crear */}
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-4 gap-4">
           <div>
             <Label>Categoría padre</Label>
             <Select
@@ -415,6 +417,15 @@ function CategoriasPanel() {
             </Select>
           </div>
           <div>
+            <Label>Orden</Label>
+            <Input
+              type="number"
+              value={nuevo.orden}
+              onChange={e => setNuevo(p => ({ ...p, orden: Number(e.target.value) }))}
+              placeholder="0"
+            />
+          </div>
+          <div>
             <Label>Estado</Label>
             <Select
               value={nuevo.activo}
@@ -425,7 +436,7 @@ function CategoriasPanel() {
             </Select>
           </div>
 
-          <div className="md:col-span-3">
+          <div className="md:col-span-4">
             <Label>Traducciones</Label>
             <div className="space-y-2">
               {nuevo.traducciones.map((t, i) => (
@@ -467,11 +478,12 @@ function CategoriasPanel() {
 
       {/* Tabla sin columna traducciones */}
       <div className="overflow-x-auto">
-        <table className="w-full text-sm text-gray-300 min-w-[900px]">
+        <table className="w-full text-sm text-gray-300 min-w-[1000px]">
           <thead className="sticky top-0 bg-gray-900">
             <tr className="text-left">
               <th className="py-2 pr-3">Categoría</th>
               <th className="py-2 pr-3">Padre</th>
+              <th className="py-2 pr-3">Orden</th>
               <th className="py-2 pr-3">Estado</th>
               <th className="py-2 pr-3">Acciones</th>
             </tr>
@@ -499,6 +511,14 @@ function CategoriasPanel() {
                       </Select>
                     </td>
                     <td className="py-3 pr-3">
+                      <Input
+                        type="number"
+                        value={r.orden}
+                        onChange={e => markDirty(r.idcategoria, x => ({ ...x, orden: Number(e.target.value) }))}
+                        className="w-24"
+                      />
+                    </td>
+                    <td className="py-3 pr-3">
                       <Select
                         value={r.activo}
                         onChange={e => markDirty(r.idcategoria, x => ({ ...x, activo: Number(e.target.value) }))}
@@ -518,7 +538,7 @@ function CategoriasPanel() {
                     </td>
                   </tr>
                   <tr className="bg-gray-950/60">
-                    <td colSpan={4} className="px-4 pb-6">
+                    <td colSpan={5} className="px-4 pb-6">
                       <div className="mt-2">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-xs tracking-wide text-gray-400">Traducciones</span>
@@ -563,7 +583,7 @@ function CategoriasPanel() {
               );
             })}
             {rows.length === 0 && (
-              <tr><td colSpan={4} className="py-8 text-center text-gray-500">No hay categorías.</td></tr>
+              <tr><td colSpan={5} className="py-8 text-center text-gray-500">No hay categorías.</td></tr>
             )}
           </tbody>
         </table>
@@ -589,6 +609,7 @@ const [nuevo, setNuevo] = useState<{
   idcategoria: number | null;
   precio: string;
   destacado: number;
+  orden: number;
   file: File | null;
   preview: string;
   traducciones: PlatoTR[];
@@ -596,6 +617,7 @@ const [nuevo, setNuevo] = useState<{
   idcategoria: null,
   precio: '',
   destacado: 0,
+  orden: 0,
   file: null,
   preview: '',
   traducciones: []
@@ -628,6 +650,7 @@ const [nuevo, setNuevo] = useState<{
   idcategoria: nuevo.idcategoria,
   precio: nuevo.precio,
   destacado: nuevo.destacado,
+  orden: nuevo.orden,
   image: imageUrl ?? '',
   traducciones: nuevo.traducciones,
 });
@@ -636,6 +659,7 @@ setNuevo({
   idcategoria: categorias[0]?.idcategoria ?? null,
   precio: '',
   destacado: 0,
+  orden: 0,
   file: null,
   preview: '',
   traducciones: []
@@ -660,6 +684,7 @@ setNuevo({
         idcategoria: row.idcategoria,
         precio: row.precio,
         destacado: row.destacado,
+        orden: row.orden,
         image: imageUrl,
         traducciones: row.traducciones,
       });
@@ -690,7 +715,7 @@ setNuevo({
 
       {/* Crear */}
       <div className="mb-6 p-4 rounded border border-gray-800 bg-gray-950 shadow-inner">
-        <div className="grid md:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-5 gap-4">
           <div>
             <Label>Categoría</Label>
             <Select
@@ -712,7 +737,23 @@ setNuevo({
   onChange={e => setNuevo(p => ({ ...p, precio: e.target.value }))}
 />
           </div>
-          <div className="md:col-span-2">
+          <div>
+            <Label>Orden</Label>
+            <Input
+              type="number"
+              value={nuevo.orden}
+              onChange={e => setNuevo(p => ({ ...p, orden: Number(e.target.value) }))}
+              placeholder="0"
+            />
+          </div>
+          <div>
+            <Label>Destacado</Label>
+            <Select value={nuevo.destacado} onChange={e => setNuevo(p => ({ ...p, destacado: Number(e.target.value) }))}>
+              <option value={0}>No</option>
+              <option value={1}>Sí</option>
+            </Select>
+          </div>
+          <div className="md:col-span-5">
             <Label>Imagen</Label>
             <div className="flex items-center gap-3">
               <div className="w-16 h-16 rounded overflow-hidden bg-gray-800">
@@ -726,13 +767,6 @@ setNuevo({
                 }}
               />
             </div>
-          </div>
-          <div>
-            <Label>Destacado</Label>
-            <Select value={nuevo.destacado} onChange={e => setNuevo(p => ({ ...p, destacado: Number(e.target.value) }))}>
-              <option value={0}>No</option>
-              <option value={1}>Sí</option>
-            </Select>
           </div>
         </div>
         <div className="mt-4">
@@ -776,12 +810,13 @@ setNuevo({
 
       {/* Tabla */}
       <div className="overflow-x-auto">
-        <table className="w-full text-sm text-gray-300 min-w-[1000px]">
+        <table className="w-full text-sm text-gray-300 min-w-[1100px]">
           <thead className="sticky top-0 bg-gray-900">
             <tr className="text-left">
               <th className="py-2 pr-3">Plato</th>
               <th className="py-2 pr-3">Categoría</th>
               <th className="py-2 pr-3">Precio</th>
+              <th className="py-2 pr-3">Orden</th>
               <th className="py-2 pr-3">Imagen</th>
               <th className="py-2 pr-3">Destacado</th>
               <th className="py-2 pr-3">Acciones</th>
@@ -809,6 +844,14 @@ setNuevo({
     onChange={e => markDirty(r.idplato, x => ({ ...x, precio: e.target.value }))}
   />
 </td>
+                    <td className="py-3 pr-3">
+                      <Input
+                        type="number"
+                        value={r.orden}
+                        onChange={e => markDirty(r.idplato, x => ({ ...x, orden: Number(e.target.value) }))}
+                        className="w-24"
+                      />
+                    </td>
                     <td className="py-3 pr-3">
                       <div className="flex items-center gap-3">
                         <div className="w-14 h-14 rounded overflow-hidden bg-gray-800">
@@ -839,7 +882,7 @@ setNuevo({
                     </td>
                   </tr>
                   <tr className="bg-gray-950/60">
-                    <td colSpan={6} className="px-4 pb-6">
+                    <td colSpan={7} className="px-4 pb-6">
                       <div className="mt-2">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-xs tracking-wide text-gray-400">Traducciones</span>
@@ -884,7 +927,7 @@ setNuevo({
               );
             })}
             {rows.length === 0 && (
-              <tr><td colSpan={6} className="py-8 text-center text-gray-500">No hay platos.</td></tr>
+              <tr><td colSpan={7} className="py-8 text-center text-gray-500">No hay platos.</td></tr>
             )}
           </tbody>
         </table>

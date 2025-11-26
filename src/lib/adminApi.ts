@@ -34,13 +34,14 @@ export type CategoriaRow = {
   idcategoria: number;
   idcategoriapadre: number | null;
   activo: number;
+  orden: number;
   traducciones: CategoriaTR[];
 };
 export const categoriasApi = {
   list: () => post<{ok:true; rows: CategoriaRow[]}>('categorias.php', { action: 'list' }),
-  create: (payload: { idcategoriapadre: number | null; activo: number; traducciones: CategoriaTR[] }) =>
+  create: (payload: { idcategoriapadre: number | null; activo: number; orden?: number; traducciones: CategoriaTR[] }) =>
     post<{ok:true; idcategoria:number}>('categorias.php', { action: 'create', ...payload }),
-  update: (payload: { idcategoria:number; idcategoriapadre?: number|null; activo?: number; traducciones?: CategoriaTR[] }) =>
+  update: (payload: { idcategoria:number; idcategoriapadre?: number|null; activo?: number; orden?: number; traducciones?: CategoriaTR[] }) =>
     post<{ok:true}>('categorias.php', { action: 'update', ...payload }),
   delete: (idcategoria: number) => post<{ok:true}>('categorias.php', { action: 'delete', idcategoria }),
 };
@@ -52,14 +53,15 @@ export type PlatoRow = {
   idcategoria: number;
   precio: string;
   destacado: number;
+  orden: number;
   image?: string | null;
   traducciones: PlatoTR[];
 };
 export const platosApi = {
   list: (idcategoria?: number) => post<{ok:true; rows: PlatoRow[]}>('platos.php', { action: 'list', idcategoria }),
-  create: (payload: { idcategoria:number; precio:string; destacado:number; image?:string|null; traducciones:PlatoTR[] }) =>
+  create: (payload: { idcategoria:number; precio:string; destacado:number; orden?:number; image?:string|null; traducciones:PlatoTR[] }) =>
     post<{ok:true; idplato:number}>('platos.php', { action: 'create', ...payload }),
-  update: (payload: { idplato:number; idcategoria?:number; precio?:string; destacado?:number; image?:string|null; traducciones?:PlatoTR[] }) =>
+  update: (payload: { idplato:number; idcategoria?:number; precio?:string; destacado?:number; orden?:number; image?:string|null; traducciones?:PlatoTR[] }) =>
     post<{ok:true}>('platos.php', { action: 'update', ...payload }),
   delete: (idplato:number) => post<{ok:true}>('platos.php', { action: 'delete', idplato }),
 };
@@ -130,6 +132,25 @@ export const contenidoHomeApi = {
     if (!res.ok || data.ok === false) throw new Error(data?.msg || `HTTP ${res.status}`);
     return data.url as string;
   }
+};
+
+/* ===== Galería de fotos ===== */
+export type GaleriaFoto = {
+  id: number;
+  idplato: number;
+  imagen: string;
+  orden: number;
+  activo: number;
+  fecha_creacion: string;
+};
+
+export const galeriaApi = {
+  list: (idplato: number) => post<{ok:true; fotos: GaleriaFoto[]}>('galeria.php', { action: 'list', idplato }),
+  create: (payload: { idplato:number; imagen:string; orden?:number; activo?:number }) =>
+    post<{ok:true; id:number}>('galeria.php', { action: 'create', ...payload }),
+  update: (payload: { id:number; imagen?:string; orden?:number; activo?:number }) =>
+    post<{ok:true}>('galeria.php', { action: 'update', ...payload }),
+  delete: (id: number) => post<{ok:true}>('galeria.php', { action: 'delete', id }),
 };
 
 /* ===== Helpers para selects por nombre ===== */

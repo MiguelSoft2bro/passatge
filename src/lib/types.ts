@@ -1,4 +1,9 @@
 // ===== Tipos de la NUEVA API =====
+export interface ApiGalleryPhoto {
+  imagen: string;
+  orden: number;
+}
+
 export interface ApiDish {
   idplato: number;
   precio: string;
@@ -6,6 +11,8 @@ export interface ApiDish {
   nombre: string;
   descripcion?: string | null;
   destacado?: number; // 0 o 1
+  orden?: number; // campo de ordenación
+  galeria?: ApiGalleryPhoto[]; // fotos adicionales
 }
 
 export interface ApiCategoryNode {
@@ -13,6 +20,7 @@ export interface ApiCategoryNode {
   idcategoriapadre: number | null;
   nombre: string;
   descripcion?: string | null;
+  orden?: number; // campo de ordenación
   platos: ApiDish[];
   children: ApiCategoryNode[];
 }
@@ -31,7 +39,9 @@ export interface MenuItem {
   categoryId: number;
   featured?: boolean;
   image?: string;
-  hasCustomImage: boolean; // 👈 nuevo
+  hasCustomImage: boolean;
+  orden?: number; // campo de ordenación
+  galeria?: string[]; // URLs de fotos adicionales
 }
 
 export interface MenuCategory {
@@ -39,6 +49,7 @@ export interface MenuCategory {
   name: string;
   parentId: number;        // mapearemos null -> 0 para no tocar tu lógica existente
   isSubcategory: boolean;
+  orden?: number; // campo de ordenación
 }
 
 export interface ContactInfo {

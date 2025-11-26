@@ -22,10 +22,29 @@ const galleryImages = [
     description: 'Espacio amplio y cómodo para tus cenas especiales'
   },
   {
-    src: '/images/051125  083C.jpg',
-    alt: 'Terraza exterior',
+    src: '/images/301025  031C.jpg',
+    alt: 'Pequeños placeres',
+    title: 'Pequeños placeres',
+    description: 'Disfruta de nuestros apertivos'
+  },
+  {
+    src: '/images/201125  410C.jpg',
+    alt: 'Vista general del local',
+    title: 'Vista General',
+    description: 'Conoce cada rincón de nuestro espacio gastronómico'
+  },
+  {
+    src: '/images/preparando-un-coctel-en-un-bar.jpg',
+    alt: 'Cocina abierta',
+    title: 'Vista General',
+    description: 'Conoce cada rincón de nuestro espacio gastronómico'
+  }
+  ,
+    {
+    src: '/images/201125  407C.jpg',
+    alt: 'Comedor',
     title: 'Terraza Exterior',
-    description: 'Disfruta del clima mediterráneo en nuestra terraza'
+    description: 'Conoce cada rincón de nuestro espacio gastronómico'
   },
   {
     src: '/images/201125  403C.jpg',
@@ -33,18 +52,11 @@ const galleryImages = [
     title: 'Vista General',
     description: 'Conoce cada rincón de nuestro espacio gastronómico'
   },
-  {
+    {
     src: '/images/201125  417C2.jpg',
     alt: 'Cocina abierta',
     title: 'Vista General',
     description: 'Conoce cada rincón de nuestro espacio gastronómico'
-  }
-  ,
-    {
-    src: '/images/051125  181C.jpg',
-    alt: 'Comedor',
-    title: 'Comedor',
-    description: 'Comedor principal con decoración moderna'
   }
 ];
 

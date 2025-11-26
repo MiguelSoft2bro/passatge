@@ -6,6 +6,7 @@ import { UtensilsCrossed, Loader2, ArrowLeft } from 'lucide-react';
 import type { MenuItem, MenuCategory } from '@/lib/types';
 import { fetchMenuData, getItemsByCategory } from '@/lib/api';
 import MenuCard from '@/components/ui/MenuCard';
+import ProductDetailModal from '../components/ui/ProductDetailModal';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function CategoryPage() {
@@ -22,7 +23,22 @@ export default function CategoryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Modal state
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleOpenModal = (item: MenuItem) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    // Esperar a que termine la animación de salida antes de limpiar
+    setTimeout(() => setSelectedItem(null), 300);
+  };
 
   // Sincroniza selectedCategory cuando cambie la URL
   useEffect(() => {
@@ -271,7 +287,16 @@ const filteredItems = useMemo(() => {
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {filteredItems.map((item, index) => (
-            <MenuCard key={item.id} item={item} index={index} />
+            <div
+              key={item.id}
+              onClick={() => handleOpenModal(item)}
+              className="cursor-pointer"
+            >
+              <MenuCard 
+                item={item} 
+                index={index} 
+              />
+            </div>
           ))}
         </motion.div>
 
@@ -294,6 +319,13 @@ const filteredItems = useMemo(() => {
           <p className="text-amber-600 font-medium">{t.menu.reservations}</p>
         </motion.div>
       </div>
+
+      {/* Product Detail Modal */}
+      <ProductDetailModal
+        item={selectedItem}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 }
