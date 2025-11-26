@@ -19,7 +19,7 @@ try {
              cxi.ididioma, cxi.nombre, cxi.descripcion
       FROM categorias c
       LEFT JOIN categoriasxidioma cxi ON cxi.idcategoria = c.idcategoria
-      ORDER BY c.idcategoria, cxi.ididioma
+   ORDER BY c.orden ASC, c.idcategoria, cxi.ididioma
     ";
     $rows = $pdo->query($sql)->fetchAll();
     // Agrupar
@@ -31,6 +31,7 @@ try {
           'idcategoria' => $id,
           'idcategoriapadre' => $r['idcategoriapadre'] !== null ? (int)$r['idcategoriapadre'] : null,
           'activo' => (int)$r['activo'],
+          'orden' => (int)$r['orden'],
           'traducciones' => []
         ];
       }
@@ -47,9 +48,10 @@ try {
 
   if ($action === 'create') {
     $padre = $data['idcategoriapadre'] ?? null;
+    $orden = isset($data['orden']) ? (int)$data['orden'] : 0;
     $activo = isset($data['activo']) ? (int)$data['activo'] : 1;
-    $pdo->prepare("INSERT INTO categorias (idcategoriapadre, activo) VALUES (?,?)")
-        ->execute([$padre ?: null, $activo]);
+    $pdo->prepare("INSERT INTO categorias (idcategoriapadre, activo, orden) VALUES (?,?,?)")
+        ->execute([$padre ?: null, $activo, $orden]);
     $idcat = (int)$pdo->lastInsertId();
 
     // traducciones: [{ididioma, nombre, descripcion}]
@@ -70,10 +72,10 @@ try {
 
     $padre = array_key_exists('idcategoriapadre',$data) ? $data['idcategoriapadre'] : null;
     $activo = array_key_exists('activo',$data) ? (int)$data['activo'] : null;
-
-    if ($padre !== null || $activo !== null) {
-      $stmt = $pdo->prepare("UPDATE categorias SET idcategoriapadre=?, activo=? WHERE idcategoria=?");
-      $stmt->execute([$padre ?: null, $activo ?? 1, $id]);
+$orden = array_key_exists('orden',$data) ? (int)$data['orden'] : null;
+    if ($padre !== null || $activo !== null || $orden !== null) {
+      $stmt = $pdo->prepare("UPDATE categorias SET idcategoriapadre=?, activo=?, orden=? WHERE idcategoria=?");
+      $stmt->execute([$padre ?: null, $activo ?? 1, $orden ?? 0, $id]);
     }
 
     // upsert traducciones

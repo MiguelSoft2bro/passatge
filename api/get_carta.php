@@ -51,7 +51,7 @@ try {
       ON cxidef.idcategoria = c.idcategoria
      AND cxidef.ididioma    = :idIdiomaDef
     WHERE c.activo = 1
-    ORDER BY COALESCE(c.idcategoriapadre, c.idcategoria), c.idcategoria, nombre
+     ORDER BY c.orden ASC, c.idcategoria ASC
   ";
   $stmtCat = $pdo->prepare($sqlCategorias);
   $stmtCat->execute([
@@ -103,7 +103,7 @@ try {
         ON pxidef.idplato  = p.idplato
        AND pxidef.ididioma = ?
       WHERE p.idcategoria IN ($inPlaceholders)
-      ORDER BY nombre, p.idplato
+      ORDER BY p.orden ASC
     ";
     $params = array_merge([$idIdioma, $DEFAULT_IDIOMA], $catIds);
     $stmtPl = $pdo->prepare($sqlPlatos);
